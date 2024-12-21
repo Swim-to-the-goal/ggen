@@ -51,3 +51,4 @@ A clean and professional Python-based application built with [Flet](https://flet
    ```bash
    git clone https://github.com/your-username/docker-compose-generator-ui.git
    cd docker-compose-generator-ui
+   python main.py
