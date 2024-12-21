@@ -1,18 +1,18 @@
 mariadb:
   database: my_database
-  enabled: false
+  enabled: true
   port: '3306'
   root_password: root_password
   user: my_user
 minio:
   console_port: '9001'
-  enabled: true
+  enabled: false
   port: '9000'
   root_password: miniosecret
   root_user: minio
 mysql:
   database: my_database
-  enabled: false
+  enabled: true
   port: '3306'
   root_password: my_root_password
   user: my_user

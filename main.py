@@ -101,19 +101,26 @@ def create_input_form(page: ft.Page):
 def create_edit_config_tab(page: ft.Page, selected_services):
     config_data = load_config()
     selected_config = {key: config_data[key] for key in selected_services if key in config_data}
-    config_text = yaml.dump(selected_config, allow_unicode=True)
+    
+    controls = []
+    for service, config in selected_config.items():
+        controls.append(ft.Text(f"{service.capitalize()} Configuration:", size=18, weight="bold"))
+        service_controls = []
+        for key, value in config.items():
+            if key != "enabled":  # Skip the "enabled" field
+                service_controls.append(ft.TextField(label=key, value=value, width=200))
+        controls.append(ft.Row(service_controls, wrap=True))
 
-    config_text_field = ft.TextField(
-        value=config_text,
-        multiline=True,
-        height=400,
-        width=500,
-        text_style=ft.TextStyle(size=14),
-    )
-
-    # Handle the save changes button click event
     def on_save_changes(e):
-        new_config = yaml.safe_load(config_text_field.value)
+        new_config = {}
+        for control in controls:
+            if isinstance(control, ft.Row):
+                for sub_control in control.controls:
+                    if isinstance(sub_control, ft.TextField):
+                        key, service = sub_control.label, sub_control.data
+                        if service not in new_config:
+                            new_config[service] = {}
+                        new_config[service][key] = sub_control.value
         for key in selected_services:
             if key in new_config:
                 config_data[key] = new_config[key]
@@ -122,7 +129,8 @@ def create_edit_config_tab(page: ft.Page, selected_services):
         page.update()
 
     save_button = ft.ElevatedButton(text="Save Changes", on_click=on_save_changes)
-    return ft.Column([config_text_field, save_button])
+    controls.append(save_button)
+    return ft.Column(controls)
 
 # Update the "Edit Config" tab with selected services
 def update_edit_config_tab(page, selected_services):
