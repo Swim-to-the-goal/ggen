@@ -199,7 +199,7 @@ def create_tabs(page: ft.Page, selected_services):
     tabs = ft.Tabs(
         selected_index=0,
         tabs=[
-            ft.Tab(text="Main", content=create_input_form(page)),
+            ft.Tab(text="Destination Configuration", content=create_input_form(page)),
             ft.Tab(text="Select Services", content=create_services_tab(page, selected_services)),
             ft.Tab(text="Edit Config", content=create_edit_config_tab(page, selected_services)),
         ],
@@ -208,7 +208,7 @@ def create_tabs(page: ft.Page, selected_services):
 
 # Main function to run the application
 def main(page: ft.Page):
-    page.title = "Tab-Based App"
+    page.title = "GGen"
     selected_services = set()
     setup_folders()
     create_tabs(page, selected_services)
