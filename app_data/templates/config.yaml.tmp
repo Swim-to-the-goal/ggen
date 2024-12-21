@@ -6,7 +6,7 @@ mariadb:
   user: my_user
 minio:
   console_port: '9001'
-  enabled: false
+  enabled: true
   port: '9000'
   root_password: miniosecret
   root_user: minio
@@ -23,6 +23,6 @@ postgresql:
   port: '5432'
   username: postgres
 redis:
-  enabled: false
+  enabled: true
   password: my_password
   port: '6379'
