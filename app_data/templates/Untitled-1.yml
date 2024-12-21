@@ -1,0 +1,99 @@
+services:
+  mariadb:
+    image: docker.io/bitnami/mariadb:11.4
+    ports:
+      - '3306:3306'
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+    environment:
+      - MARIADB_ROOT_PASSWORD=my_root_password
+      - MARIADB_USER=my_user
+      - MARIADB_DATABASE=my_database
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
+volumes:
+  mariadb_data:
+    driver: local
+
+---
+services:
+  minio:
+    image: docker.io/bitnami/minio:2024
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - 'minio_data:/bitnami/minio/data'
+    environment:
+      - MINIO_ROOT_USER=minio
+      - MINIO_ROOT_PASSWORD=miniosecret
+
+volumes:
+  minio_data:
+    driver: local
+
+---
+services:
+  mysql:
+    image: docker.io/bitnami/mysql:8.4
+    ports:
+      - '3306:3306'
+    volumes:
+      - 'mysql_data:/bitnami/mysql/data'
+    environment:
+      - MYSQL_USER=my_user
+      - MYSQL_DATABASE=my_database
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - MYSQL_ROOT_PASSWORD=my_root_password
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mysql/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  mysql_data:
+    driver: local
+
+---
+
+services:
+  postgresql:
+    image: docker.io/bitnami/postgresql:17
+    ports:
+      - '5432:5432'
+    volumes:
+      - 'postgresql_data:/bitnami/postgresql'
+    environment:
+      #- 'ALLOW_EMPTY_PASSWORD=yes'
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=my_password
+      - POSTGRESQL_DATABASE=my_database
+volumes:
+  postgresql_data:
+    driver: local
+
+---
+
+# Copyright Broadcom, Inc. All Rights Reserved.
+# SPDX-License-Identifier: APACHE-2.0
+
+services:
+  redis:
+    image: docker.io/bitnami/redis:7.4
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - REDIS_PASSWORD=my_password
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis_data:/bitnami/redis/data'
+
+volumes:
+  redis_data:
+    driver: local
+

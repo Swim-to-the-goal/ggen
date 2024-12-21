@@ -1,0 +1,35 @@
+
+
+
+mariadb:
+  enabled: true
+  port: "3306"
+  root_password: "root_password"
+  user: "my_user"
+  database: "my_database"
+
+minio:
+  enabled: true
+  port: "9000"
+  console_port: "9001"
+  root_user: "minio"
+  root_password: "miniosecret"
+
+mysql:
+  enabled: true
+  port: "3306"
+  user: "my_user"
+  database: "my_database"
+  root_password: "my_root_password"
+
+postgresql:
+  enabled: false
+  port: "5432"
+  username: "postgres"
+  password: "my_password"
+  database: "my_database"
+
+redis:
+  enabled: true
+  port: "6379"
+  password: "my_password"
