@@ -1,3 +1,5 @@
 flet
 pyyaml
 jinja2
+gitpython
+shutil

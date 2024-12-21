@@ -1,0 +1,122 @@
+{% if prometheus.enabled %}
+version: '3.9'
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.47.1
+    restart: on-failure
+    container_name: prometheus
+    volumes:
+      - prometheus_data:/prometheus
+      - ./prometheus:/etc/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=30d
+      - --storage.tsdb.retention.size=150GB
+      - --web.enable-lifecycle
+    networks:
+      - web_net
+      - app_net
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=web_net
+      - traefik.http.routers.prometheus.entrypoints=http
+      - traefik.http.routers.prometheus.rule=Host("{{ prometheus_sub }}.{{ DOMAIN_ADDRESS }}")
+      - traefik.http.routers.prometheus.middlewares=https-redirect
+      - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.prometheus-secure.entrypoints=https
+      - traefik.http.routers.prometheus-secure.rule=Host("{{ prometheus_sub }}.{{ DOMAIN_ADDRESS }}")
+      - traefik.http.routers.prometheus-secure.tls=true
+      - traefik.http.routers.prometheus-secure.tls.options=default
+      - traefik.http.routers.prometheus-secure.middlewares=web-auth
+      - traefik.http.routers.prometheus-secure.tls.certresolver=mycert
+      - traefik.http.services.prometheus.loadbalancer.server.port=9090
+
+  grafana:
+    image: grafana/grafana:10.1.5
+    restart: on-failure
+    container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/:/etc/grafana/provisioning/
+    environment:
+      - GF_SECURITY_ADMIN_USER={{ grafana_username }}
+      - GF_SECURITY_ADMIN_PASSWORD={{ grafana_password }}
+      - GF_INSTALL_PLUGINS={{ grafana_install_plugins }}
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_PATHS_DATA=/var/lib/grafana
+    networks:
+      - web_net
+      - app_net
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=web_net
+      - traefik.http.routers.grafana.entrypoints=http
+      - traefik.http.routers.grafana.rule=Host("{{ grafana_sub }}.{{ DOMAIN_ADDRESS }}")
+      - traefik.http.routers.grafana.middlewares=https-redirect
+      - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.grafana-secure.entrypoints=https
+      - traefik.http.routers.grafana-secure.rule=Host("{{ grafana_sub }}.{{ DOMAIN_ADDRESS }}")
+      - traefik.http.routers.grafana-secure.tls=true
+      - traefik.http.routers.grafana-secure.tls.options=default
+      - traefik.http.routers.grafana-secure.tls.certresolver=mycert
+      - traefik.http.services.grafana.loadbalancer.server.port=3000
+
+  cadvisor:
+    image: google/cadvisor:v0.26.1
+    command: --disable_metrics=disk,udp,percpu
+    restart: on-failure
+    hostname: 'observability'
+    container_name: cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - app_net
+
+  blackbox-exporter:
+    image: prom/blackbox-exporter:v0.24.0
+    restart: on-failure
+    hostname: 'observability'
+    container_name: blackbox-exporter
+    command:
+      - '--config.file=/etc/blackboxexporter/blackbox-exporter.yml'
+    volumes:
+      - ./blackbox:/etc/blackboxexporter
+    networks:
+      - app_net
+
+  node-exporter:
+    image: prom/node-exporter:v1.6.1
+    restart: on-failure
+    hostname: 'observability'
+    container_name: node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+    networks:
+      - app_net
+
+networks:
+  app_net:
+    external: false
+    name: app_net
+  web_net:
+    external: true
+    name: web_net
+
+volumes:
+  grafana_data:
+    name: grafana_data
+  prometheus_data:
+    name: prometheus_data
+{% endif %}

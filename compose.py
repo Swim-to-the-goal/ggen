@@ -11,21 +11,25 @@ def load_config():
     else:
         return {}
 
-# Generate docker-compose.yml using Jinja2 template
+# Generate docker-compose files using Jinja2 templates
 def generate_docker_compose():
     config_data = load_config()
-    template_path = os.path.join("app_data", "templates", "docker-compose.j2")
-    output_path = "docker-compose.yml"
+    templates_path = "app_data/templates"
+    output_folder = "."
 
-    if os.path.exists(template_path):
-        with open(template_path, "r") as template_file:
-            template = Template(template_file.read())
-            rendered = template.render(config_data)
+    for template_file in os.listdir(templates_path):
+        if template_file.endswith(".j2"):
+            template_path = os.path.join(templates_path, template_file)
+            output_file_name = os.path.splitext(template_file)[0] + ".yml"
+            output_path = os.path.join(output_folder, output_file_name)
+
+            with open(template_path, "r") as file:
+                template = Template(file.read())
+                rendered = template.render(config_data)
+
             with open(output_path, "w") as output_file:
                 output_file.write(rendered)
-        print("docker-compose.yml generated successfully!")
-    else:
-        print(f"Template file {template_path} not found.")
+            print(f"{output_file_name} generated successfully!")
 
 # Main function to run the script
 def main():

@@ -1,24 +1,24 @@
 mariadb:
   database: my_databasez
-  enabled: true
+  enabled: false
   port: '3306'
   root_password: root_passwordz
   user: my_userz
 minio:
   console_port: '9001'
-  enabled: true
+  enabled: false
   port: '9000'
   root_password: miniosecret
   root_user: minio
 mysql:
   database: my_databasez
-  enabled: true
+  enabled: false
   port: '3306'
   root_password: my_root_password
   user: my_userz
 postgresql:
   database: my_database
-  enabled: true
+  enabled: false
   password: my_password
   port: '5432'
   username: postgres
@@ -31,6 +31,6 @@ prometheus:
   grafana_username: uuser
   prometheus_sub: prometheus
 redis:
-  enabled: true
+  enabled: false
   password: my_password
   port: '6379'
