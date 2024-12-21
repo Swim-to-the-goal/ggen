@@ -1,5 +1,4 @@
 flet
-pyyaml
-jinja2
-gitpython
-shutil
+PyYAML
+Jinja2
+GitPython
