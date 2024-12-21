@@ -1,2 +1,3 @@
 flet
 pyyaml
+jinja2

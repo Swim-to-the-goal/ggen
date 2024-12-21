@@ -137,7 +137,7 @@ def create_input_form(page: ft.Page):
         page.update()
 
     return ft.Column([
-        ft.Text("Main Page", size=30),
+        ft.Text("Specify the destination", size=30),
         domain_input,
         ip_input,
         ft.ElevatedButton("Save to domain.yaml", on_click=on_submit),
