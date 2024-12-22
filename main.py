@@ -5,7 +5,7 @@ from modules.docker_compose_generator import generate_docker_compose
 from modules.prometheus_setup import handle_prometheus_setup
 
 def main(page: ft.Page):
-    page.title = "Tab-Based App"
+    page.title = "GGen"
     selected_services = set()
 
     def create_input_form(page: ft.Page):
