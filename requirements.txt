@@ -2,3 +2,4 @@ flet
 PyYAML
 Jinja2
 GitPython
+requests
