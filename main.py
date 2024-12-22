@@ -3,9 +3,10 @@ import flet as ft
 from modules.config_loader import load_config, save_config_to_yaml, update_domain_address_in_config, save_ip_to_inventory
 from modules.docker_compose_generator import generate_docker_compose
 from modules.prometheus_setup import handle_prometheus_setup
+from modules.about import create_about_tab
 
 def main(page: ft.Page):
-    page.title = "GGen"
+    page.title = "Tab-Based App"
     selected_services = set()
 
     def create_input_form(page: ft.Page):
@@ -128,6 +129,7 @@ def main(page: ft.Page):
                 ft.Tab(text="Main", content=create_input_form(page)),
                 ft.Tab(text="Select Services", content=create_services_tab(page, selected_services)),
                 ft.Tab(text="Edit Config", content=create_edit_config_tab(page, selected_services)),
+                ft.Tab(text="About", content=create_about_tab(page)),
             ],
         )
         page.add(tabs)
