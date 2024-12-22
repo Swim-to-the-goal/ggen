@@ -4,10 +4,14 @@ from modules.config_loader import load_config, save_config_to_yaml, update_domai
 from modules.docker_compose_generator import generate_docker_compose
 from modules.prometheus_setup import handle_prometheus_setup
 from modules.about import create_about_tab
+from modules.version_checker import check_for_updates
 
 def main(page: ft.Page):
     page.title = "Tab-Based App"
     selected_services = set()
+
+
+    check_for_updates(page)
 
     def create_input_form(page: ft.Page):
         domain_input = ft.TextField(label="Domain", width=300)
@@ -89,7 +93,7 @@ def main(page: ft.Page):
                             if service not in new_config:
                                 new_config[service] = {}
                             new_config[service][key] = sub_control.value
-            # Ensure 'enabled' remains in config_data
+
             for key in config_data:
                 if key in new_config:
                     new_config[key]["enabled"] = config_data[key].get("enabled", False)

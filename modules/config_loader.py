@@ -5,7 +5,7 @@ def load_config():
     config_file = "app_data/config.yaml"
     template_config_file = os.path.join("app_data", "templates", "config.yaml.tmp")
 
-    # If config.yaml does not exist, create it from the template
+    # if config.yaml does not exist , create it from the template
     if not os.path.exists(config_file) and os.path.exists(template_config_file):
         with open(template_config_file, "r") as template_file:
             config_data = yaml.safe_load(template_file)
@@ -17,7 +17,7 @@ def load_config():
     else:
         config_data = {}
 
-    # Ensure 'enabled' key exists for all services
+
     for service in config_data.values():
         if isinstance(service, dict) and 'enabled' not in service:
             service['enabled'] = False

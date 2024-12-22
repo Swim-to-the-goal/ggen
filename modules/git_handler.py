@@ -4,7 +4,7 @@ import git
 
 def clone_repo(repo_url, clone_dir):
     if os.path.exists(clone_dir):
-        shutil.rmtree(clone_dir)  # پاک کردن پوشه در صورت وجود
+        shutil.rmtree(clone_dir)
     os.makedirs(clone_dir)
     git.Repo.clone_from(repo_url, clone_dir)
     print(f"Repository cloned to {clone_dir}")
