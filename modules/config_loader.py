@@ -5,7 +5,7 @@ def load_config():
     config_file = "app_data/config.yaml"
     template_config_file = os.path.join("app_data", "templates", "config.yaml.tmp")
 
-    # if config.yaml does not exist , create it from the template
+
     if not os.path.exists(config_file) and os.path.exists(template_config_file):
         with open(template_config_file, "r") as template_file:
             config_data = yaml.safe_load(template_file)

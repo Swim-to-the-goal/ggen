@@ -1,18 +1,16 @@
 import json
 import subprocess
 import flet as ft
+from modules.blocker_layer import show_blocker_layer, open_update_link
 
 def get_current_version():
-    with open("version.json", "r") as f:
-        version_info = json.load(f)
-    return version_info["version"]
+    return APP_VERSION
 
 def get_latest_version_tags():
     result = subprocess.run(["git", "ls-remote", "--tags", "https://github.com/Swim-to-the-goal/ggen.git"],
                             stdout=subprocess.PIPE, text=True)
     tags = [line.split("/")[-1].strip() for line in result.stdout.split("\n") if line]
     sorted_tags = sorted(tags, key=lambda s: list(map(int, s.split("."))))
-    print("Latest versions from git:", sorted_tags)
     return sorted_tags
 
 def compare_versions(current_version, latest_version):
@@ -37,28 +35,14 @@ def show_update_message(page):
     dialog.open = True
     page.update()
 
-def open_update_link(page):
-    page.launch_url("https://github.com/Swim-to-the-goal/ggen")
-
 def close_dialog(page, dialog):
     dialog.open = False
     page.update()
 
 def force_update_message(page):
-    dialog = ft.AlertDialog(
-        title=ft.Text("Update Required"),
-        content=ft.Text("You must update to the latest version to continue using the app."),
-        actions=[
-            ft.TextButton("Update Now", on_click=lambda _: open_update_link(page))
-        ],
-        close_on_backdrop_click=False
-    )
-    page.dialog = dialog
-    dialog.open = True
-    page.update()
+    show_blocker_layer(page)
 
-def check_for_updates(page):
-    current_version = get_current_version()
+def check_for_updates(page, current_version):
     latest_versions = get_latest_version_tags()
 
     if not latest_versions:
@@ -73,4 +57,4 @@ def check_for_updates(page):
     if version_difference == 1:
         show_update_message(page)
     elif version_difference >= 2:
-        force_update_message(page)  
+        force_update_message(page)
