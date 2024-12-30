@@ -5,7 +5,6 @@ def load_config():
     config_file = "app_data/config.yaml"
     template_config_file = os.path.join("app_data", "templates", "config.yaml.tmp")
 
-
     if not os.path.exists(config_file) and os.path.exists(template_config_file):
         with open(template_config_file, "r") as template_file:
             config_data = yaml.safe_load(template_file)
@@ -17,7 +16,6 @@ def load_config():
     else:
         config_data = {}
 
-
     for service in config_data.values():
         if isinstance(service, dict) and 'enabled' not in service:
             service['enabled'] = False
@@ -26,6 +24,8 @@ def load_config():
 
 def save_config_to_yaml(config_data):
     config_file = "app_data/config.yaml"
+    if not os.path.exists("app_data"):
+        os.makedirs("app_data")
     with open(config_file, "w") as yaml_file:
         yaml.dump(config_data, yaml_file)
 

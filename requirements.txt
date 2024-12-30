@@ -3,3 +3,5 @@ PyYAML
 Jinja2
 GitPython
 requests
+dash
+plotly

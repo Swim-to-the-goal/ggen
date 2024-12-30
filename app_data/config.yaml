@@ -32,12 +32,12 @@ prometheus:
   prometheus_sub: prometheus
 redis:
   enabled: true
-  password: my_password
+  password: my_passworda
   port: '6379'
 traefik:
-  enabled: true
-  domain_address: tsetdomain.com
-  traefik_sub: traefik
-  web_auth_user: uuser
-  web_auth_passowrd: pazzwordzzzz
   acme_email: kalak.bili@gmail.com
+  domain_address: tsetdomain.com
+  enabled: true
+  traefik_sub: traefik
+  web_auth_passowrd: pazzwordzzzz
+  web_auth_user: uuser
