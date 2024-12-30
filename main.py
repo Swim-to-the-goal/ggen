@@ -25,7 +25,7 @@ def main(page: ft.Page):
     page.title = "GGEN"
     selected_services = set()
 
-    # افزودن تم اسکرول
+
     page.theme = ft.Theme(
         scrollbar_theme=ft.ScrollbarTheme(
             track_color={
