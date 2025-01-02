@@ -1,0 +1,46 @@
+lamp_stack:
+  mysql:
+    database: lamp_database
+    port: '3306'
+    root_password: lamp_password
+    user: lamp_user
+  apache:
+    port: '80'
+  php:
+    version: '7.4'
+
+mean_stack:
+  mongodb:
+    port: '27017'
+    root_password: mean_password
+    user: mean_user
+  nodejs:
+    version: '14'
+
+mern_stack:
+  mongodb:
+    port: '27017'
+    root_password: mern_password
+    user: mern_user
+  nodejs:
+    version: '14'
+  react:
+    version: '16'
+
+elk_stack:
+  elasticsearch:
+    port: '9200'
+  logstash:
+    port: '5044'
+  kibana:
+    port: '5601'
+
+wordpress_stack:
+  enabled: true
+  mysql:
+    database: wordpress_database
+    port: '3306'
+    root_password: wordpress_password
+    user: wordpress_user
+  wordpress:
+    port: '80'

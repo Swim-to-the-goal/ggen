@@ -1,43 +1,29 @@
 mariadb:
   database: my_databasez
-  enabled: true
+  enabled: false
   port: '3306'
   root_password: root_passwordz
   user: my_userz
 minio:
   console_port: '9001'
-  enabled: true
+  enabled: false
   port: '9000'
   root_password: miniosecret
   root_user: minio
-mysql:
-  database: my_databasez
-  enabled: true
-  port: '3306'
-  root_password: my_root_password
-  user: my_userz
 postgresql:
   database: my_database
-  enabled: true
+  enabled: false
   password: my_password
   port: '5432'
   username: postgres
-prometheus:
-  domain_address: tsetdomain.com
-  enabled: true
-  grafana_install_plugins: grafana-clock-panel,grafana-simple-json-datasource,grafana-piechart-panel
-  grafana_password: pazzowrdz
-  grafana_sub: grafana
-  grafana_username: uuser
-  prometheus_sub: prometheus
 redis:
-  enabled: true
-  password: my_passworda
+  enabled: false
+  password: my_password
   port: '6379'
 traefik:
   acme_email: kalak.bili@gmail.com
   domain_address: tsetdomain.com
-  enabled: true
+  enabled: false
   traefik_sub: traefik
   web_auth_passowrd: pazzwordzzzz
   web_auth_user: uuser

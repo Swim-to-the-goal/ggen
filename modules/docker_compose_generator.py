@@ -35,6 +35,3 @@ def test_generate_docker_compose():
             generate_docker_compose(template, output_file, {service_name: config_data[service_name]})
         else:
             print(f"Service {service_name} is not defined in config_data or not enabled.")
-
-# اجرای تست
-test_generate_docker_compose()

@@ -19,6 +19,6 @@ def handle_prometheus_setup():
     copy_monitoring_files(clone_dir, target_dir)
     generate_docker_compose("docker-compose-mon.j2", os.path.join(target_dir, "docker-compose-mon.yml"))
 
-    # Cleanup cloned repository with error handling
+
     shutil.rmtree(clone_dir, onerror=handle_remove_readonly)
     print("Cloned repository cleaned up")
