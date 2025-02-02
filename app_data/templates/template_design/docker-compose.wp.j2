@@ -1,0 +1,104 @@
+{% if wordpress_stack.enabled %}
+networks:
+  web_net:
+    external: true
+  app_net:
+
+services:
+  wordpress:
+    image: wordpress:latest
+    restart: always
+    container_name: wordpress
+    logging:
+      options:
+        max-size: "100m"
+        max-file: "20"
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_USER: {{ wordpress_stack.wordpress_db_user }}
+      WORDPRESS_DB_PASSWORD: {{ wordpress_stack.wordpress_db_password }}
+      WORDPRESS_DB_NAME: {{ wordpress_stack.wordpress_db_name }}
+    volumes:
+      - ./wordpress/data:/var/www/html
+    networks:
+      - web_net
+      - app_net
+    depends_on:
+        - mysql
+        - redis
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web_net"
+      - "traefik.http.routers.wordpress.rule=Host(`{{ wordpress_stack.domain_address }}`)"
+      - "traefik.http.routers.wordpress.entrypoints=web"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.wordpress.middlewares=redirect-to-https@docker"
+      - "traefik.http.routers.wordpress-secured.rule=Host(`{{ wordpress_stack.domain_address }}`)"
+      - "traefik.http.routers.wordpress-secured.entrypoints=web-secure"
+      - "traefik.http.routers.wordpress-secured.tls=true"
+      - "traefik.http.routers.wordpress-secured.tls.certresolver=myhttpchallenge"
+
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
+    restart: always
+    logging:
+      options:
+        max-size: "20m"
+        max-file: "5"
+    environment:
+      MYSQL_DATABASE: {{ wordpress_stack.wordpress_db_name }}
+      MYSQL_USER: {{ wordpress_stack.wordpress_db_user }}
+      MYSQL_PASSWORD: {{ wordpress_stack.wordpress_db_password }}
+      MYSQL_ROOT_PASSWORD: {{ wordpress_stack.mysql_root_password }}
+    volumes:
+      - ./mysql:/var/lib/mysql
+    networks:
+      - app_net
+
+  redis:
+    container_name: redis
+    image: redis:6
+    restart: always
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    ports:
+      - "6379:6379"
+    networks:
+      - app_net
+    entrypoint: redis-server --maxmemory 512mb -maxmemory-policy allkeys-lru
+    
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    networks:
+      - app_net
+      - web_net
+    depends_on:
+      - mysql
+    restart: always
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+      - MYSQL_ROOT_PASSWORD={{ wordpress_stack.mysql_root_password }}
+    volumes:
+     - /sessions
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web_net"
+      - "traefik.http.routers.phpmyadmin.rule=Host(`{{ wordpress_stack.phpmyadmin_domain }}`)"
+      - "traefik.http.routers.phpmyadmin.entrypoints=web"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.phpmyadmin.middlewares=redirect-to-https@docker"
+      - "traefik.http.routers.phpmyadmin-secured.rule=Host(`{{ wordpress_stack.phpmyadmin_domain }}`)"
+      - "traefik.http.routers.phpmyadmin-secured.entrypoints=web-secure"
+      - "traefik.http.routers.phpmyadmin-secured.tls=true"
+      - "traefik.http.routers.phpmyadmin-secured.tls.certresolver=myhttpchallenge"
+{% endif %}

@@ -1,0 +1,8 @@
+wordpress_stack:
+  domain_address: domain.com
+  enabled: true
+  mysql_root_password: Mysqlpazzwwordx@222
+  phpmyadmin_domain: phpmyadmin
+  wordpress_db_name: wordpressdb
+  wordpress_db_password: pazzwordadmin@@@222
+  wordpress_db_user: admin1
